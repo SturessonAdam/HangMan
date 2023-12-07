@@ -25,7 +25,6 @@ public class Main {
         if (tries >= 9) { //om tries går upp till 9 eller högre så förlorar man (eftersom man subtraherar antalet tries med ursprungliga 9 i "printCurrentState"
             System.out.println("Tyvärr, du har förlorat. Rätt ord: " + word);
         }
->>>>>>> Adam
     }
 
     //metod för att välja ord att spela med
