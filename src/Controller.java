@@ -1,5 +1,4 @@
 public class Controller {
-    
      /*
         String word = gameWord();
         StringBuilder hiddenWord = makeGameWordHidden(word.length());
