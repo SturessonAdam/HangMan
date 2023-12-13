@@ -214,7 +214,7 @@ public class Main extends Application {
     }
 
     private void showNextPenalty(int tries, Stage primaryStage) {
-        System.out.println("tries:" + tries);
+        /*System.out.println("tries:" + tries);*/
         Line line = null;
         Circle circle = null;
         switch (tries) {
