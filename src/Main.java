@@ -46,6 +46,7 @@ public class Main extends Application {
         //"Video screen" användes som ett allmänt begrepp för att hänvisa till den initiala skärmen i JavaFX-applikation.
         VBox firstScreenLayout = createVBoxWithChildren(10, Pos.CENTER, playButton, welcomeLabel);
         Scene firstScreenScene = new Scene(firstScreenLayout, 400, 300);
+        firstScreenLayout.setStyle("-fx-background-color: #00FA9A;");
 
         // Ange startsidan
         primaryStage.setScene(firstScreenScene);
@@ -60,6 +61,7 @@ public class Main extends Application {
         // Skapa layout för spelsidan
         VBox gameMenuLayout = createVBoxWithChildren(10, Pos.CENTER, startButton);
         Scene gameMenuScene = new Scene(gameMenuLayout, 300, 200);
+        gameMenuLayout.setStyle("-fx-background-color: #00FA9A;");
 
         // Ange spelsidan
         primaryStage.setScene(gameMenuScene);
@@ -76,6 +78,7 @@ public class Main extends Application {
         // Skapa layout för startsidan
         VBox startLayout = createVBoxWithChildren(10, Pos.CENTER, wordLabel, wordTextField, startButton);
         Scene startScene = new Scene(startLayout, 300, 200);
+        startLayout.setStyle("-fx-background-color: #00FA9A;");
 
         // Ange startsidan
         primaryStage.setScene(startScene);
