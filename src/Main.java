@@ -98,6 +98,7 @@ public class Main extends Application {
         // Skapa layout för spelsidan
         GridPane gameLayout = createGridPaneWithChildren(10, 10, 10, new Insets(10), Pos.CENTER,
                 hiddenWordLabel, triesLabel, guessLabel, guessTextField, guessButton);
+        gameLayout.setStyle("-fx-background-color:#00FA9A;");
 
         // Create an AnchorPane to overlay the Line on top of the GridPane
         AnchorPane anchorPane = new AnchorPane();
