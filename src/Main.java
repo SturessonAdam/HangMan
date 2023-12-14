@@ -31,39 +31,46 @@ public class Main extends Application {
     @Override
     // Startmetod för JavaFX-applikationen
     public void start(Stage primaryStage) {
-        // Ställ in den initiala scenen
-        primaryStage.setTitle("Hangman Game");
+        int windowWidth = 300;
+        int windowHeight = 200;
+        int spacing = 10;
 
-        // Skapa UI-element för startsidan
-        Button playButton = new Button("To game menu.");
-        playButton.setOnAction(e -> showGameMenu(primaryStage));
+        //skapar upp 6 nya spelscener men går bara spela på en av dom då alla fönster använder samma variabler.
+        for (int i = 0; i < 6; i++) {
+            Stage newStage = new Stage();
+            VBox gameLayout = showGameMenu(newStage);
+            Scene scene = new Scene(gameLayout, 300, 200);
+            newStage.setScene(scene);
+            newStage.setTitle("Hangman Game " + (i + 1));
 
-        // välkommen meddelande
-        Label welcomeLabel = new Label("Welcome to Hangman Game by IronPants group!");
+            //placerar fönsterna brevid och under varandra, 3 och 3.
+            if(i<3) {
+            newStage.setX(i * (windowWidth + spacing));
+            newStage.setY(100); }
+            else {
+                newStage.setX((i-3)*(windowWidth + spacing));
+                newStage.setY(130+windowHeight + spacing);
+            }
 
-        // Skapa layout för startsidan
-        VBox firstScreenLayout = createVBoxWithChildren(10, Pos.CENTER, playButton, welcomeLabel);
-        Scene firstScreenScene = new Scene(firstScreenLayout, 400, 300);
-        firstScreenLayout.setStyle("-fx-background-color: #00FA9A;");
-
-        // Ange startsidan
-        primaryStage.setScene(firstScreenScene);
-        primaryStage.show();
+            newStage.show();
+        }
     }
 
-    private void showGameMenu(Stage primaryStage) {
+    private VBox showGameMenu(Stage currentStage) {
         // Skapa UI-element för spelsidan
+        Label welcomeLabel = new Label("Hangman Game by IronPants group!");
+        Label multiplayerLabel = new Label("6 skärm - multiplayer version");
         Button startButton = new Button("Spela");
-        startButton.setOnAction(e -> showStartScreen(primaryStage));
+        startButton.setOnAction(e -> showStartScreen(currentStage));
 
-        // Skapa layout för spelsidan
-        VBox gameMenuLayout = createVBoxWithChildren(10, Pos.CENTER, startButton);
-        Scene gameMenuScene = new Scene(gameMenuLayout, 300, 200);
+        VBox gameMenuLayout = new VBox(10);
+        gameMenuLayout.setAlignment(Pos.CENTER);
+        gameMenuLayout.getChildren().add(welcomeLabel);
+        gameMenuLayout.getChildren().add(multiplayerLabel);
+        gameMenuLayout.getChildren().add(startButton);
         gameMenuLayout.setStyle("-fx-background-color: #00FA9A;");
 
-        // Ange spelsidan
-        primaryStage.setScene(gameMenuScene);
-        primaryStage.show();
+      return gameMenuLayout;
     }
 
     private void showStartScreen(Stage primaryStage) {
@@ -78,7 +85,6 @@ public class Main extends Application {
         Scene startScene = new Scene(startLayout, 300, 200);
         startLayout.setStyle("-fx-background-color: #00FA9A;");
 
-        // Ange startsidan
         primaryStage.setScene(startScene);
         primaryStage.show();
     }
@@ -140,7 +146,7 @@ public class Main extends Application {
         return !hiddenWord.toString().contains("-");
     }
 
-    private void updateGameScreen(Stage primaryStage) {
+    private void updateGameScreen() {
         // Uppdatera spelet med dolt ord
         hiddenWordLabel.setText(hiddenWord.toString());
     }
@@ -159,7 +165,7 @@ public class Main extends Application {
         if (inputWord.matches("[a-z]+")) {
             word = inputWord;
             hiddenWord = new StringBuilder("-".repeat(word.length()));
-            tries = 9;
+            tries = 10;
             showGameScreen(primaryStage);
         } else {
             showAlert("Ogiltig inmatning", "Ange ett giltigt ord (endast små bokstäver).");
@@ -172,15 +178,15 @@ public class Main extends Application {
             char guess = inputGuess.charAt(0);
             boolean correctGuess = updateHiddenWord(guess);
             if (!correctGuess) {
-                showNextPenalty(tries, primaryStage);
+                showNextPenalty(tries);
                 tries--;
                 triesLabel.setText("Försök kvar: " + tries);
             }
-            updateGameScreen(primaryStage);
+            updateGameScreen();
             if (isWordGuessed()) {
                 showAlert("Grattis!", "Du gissade rätt!");
                 primaryStage.close();
-            } else if (tries == -1) {
+            } else if (tries == 0) {
                 showAlert("Spelet slut", "Inga fler försök. Ordet var: " + word);
                 primaryStage.close();
             }
@@ -212,21 +218,21 @@ public class Main extends Application {
         return gridPane;
     }
 
-    private void showNextPenalty(int tries, Stage primaryStage) {
+    private void showNextPenalty(int tries) {
         /*System.out.println("tries:" + tries);*/
         Line line = null;
         Circle circle = null;
         switch (tries) {
-            case 9 -> line = new Line(225, 95, 280, 95);
-            case 8 -> line = new Line(253, 95, 253, 25);
-            case 7 -> line = new Line(253, 25, 210, 25);
-            case 6 -> line = new Line(210, 25, 210, 45);
-            case 5 -> circle = new Circle(210, 55, 10);
-            case 4 -> line = new Line(210, 65, 210, 80);
-            case 3 -> line = new Line(210, 72, 200, 70);
-            case 2 -> line = new Line(210, 72, 220, 70);
-            case 1 -> line = new Line(210, 80, 200, 87);
-            case 0 -> line = new Line(210, 80, 220, 87);
+            case 10 -> line = new Line(225, 95, 280, 95);
+            case 9 -> line = new Line(253, 95, 253, 25);
+            case 8 -> line = new Line(253, 25, 210, 25);
+            case 7 -> line = new Line(210, 25, 210, 45);
+            case 6 -> circle = new Circle(210, 55, 10);
+            case 5 -> line = new Line(210, 65, 210, 80);
+            case 4 -> line = new Line(210, 72, 200, 70);
+            case 3 -> line = new Line(210, 72, 220, 70);
+            case 2-> line = new Line(210, 80, 200, 87);
+            case 1 -> line = new Line(210, 80, 220, 87);
         }
 
         if (line != null) {
