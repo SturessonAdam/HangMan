@@ -35,19 +35,19 @@ public class Main extends Application {
         primaryStage.setTitle("Hangman Game");
 
         // Skapa UI-element för startsidan
-        Button playButton = new Button("To game menu.");
-        playButton.setOnAction(e -> showGameMenu(primaryStage));
+        Button playButton = new Button("Spela");
+        playButton.setOnAction(e -> showStartScreen(primaryStage));
 
         // välkommen meddelande
         Label welcomeLabel = new Label("Welcome to Hangman Game by IronPants group!");
 
-        // Skapa layout för startsidan
-        VBox firstScreenLayout = createVBoxWithChildren(10, Pos.CENTER, playButton, welcomeLabel);
-        Scene firstScreenScene = new Scene(firstScreenLayout, 400, 300);
-        firstScreenLayout.setStyle("-fx-background-color: #00FA9A;");
+        // Skapa layout för spelsidan
+        VBox gameMenuLayout = createVBoxWithChildren(10, Pos.CENTER, playButton, welcomeLabel);
+        Scene gameMenuScene = new Scene(gameMenuLayout, 300, 200);
+        gameMenuLayout.setStyle("-fx-background-color: #00FA9A;");
 
-        // Ange startsidan
-        primaryStage.setScene(firstScreenScene);
+        // Ange spelsidan
+        primaryStage.setScene(gameMenuScene);
         primaryStage.show();
     }
 
@@ -159,7 +159,7 @@ public class Main extends Application {
         if (inputWord.matches("[a-z]+")) {
             word = inputWord;
             hiddenWord = new StringBuilder("-".repeat(word.length()));
-            tries = 9;
+            tries = 10;
             showGameScreen(primaryStage);
         } else {
             showAlert("Ogiltig inmatning", "Ange ett giltigt ord (endast små bokstäver).");
@@ -180,7 +180,7 @@ public class Main extends Application {
             if (isWordGuessed()) {
                 showAlert("Grattis!", "Du gissade rätt!");
                 primaryStage.close();
-            } else if (tries == -1) {
+            } else if (tries == 0) {
                 showAlert("Spelet slut", "Inga fler försök. Ordet var: " + word);
                 primaryStage.close();
             }
@@ -217,25 +217,24 @@ public class Main extends Application {
         Line line = null;
         Circle circle = null;
         switch (tries) {
-            case 9 -> line = new Line(225, 95, 280, 95);
-            case 8 -> line = new Line(253, 95, 253, 25);
-            case 7 -> line = new Line(253, 25, 210, 25);
-            case 6 -> line = new Line(210, 25, 210, 45);
-            case 5 -> circle = new Circle(210, 55, 10);
-            case 4 -> line = new Line(210, 65, 210, 80);
-            case 3 -> line = new Line(210, 72, 200, 70);
-            case 2 -> line = new Line(210, 72, 220, 70);
-            case 1 -> line = new Line(210, 80, 200, 87);
-            case 0 -> line = new Line(210, 80, 220, 87);
+            case 10 -> line = new Line(225, 95, 280, 95);
+            case 9 -> line = new Line(253, 95, 253, 25);
+            case 8 -> line = new Line(253, 25, 210, 25);
+            case 7 -> line = new Line(210, 25, 210, 45);
+            case 6 -> circle = new Circle(210, 55, 10);
+            case 5 -> line = new Line(210, 65, 210, 80);
+            case 4 -> line = new Line(210, 72, 200, 70);
+            case 3 -> line = new Line(210, 72, 220, 70);
+            case 2 -> line = new Line(210, 80, 200, 87);
+            case 1 -> line = new Line(210, 80, 220, 87);
         }
 
         if (line != null) {
-            line.setStroke(Color.BLUE);
             figure.getChildren().add(line);
         }
         if (circle != null) {
             circle.setFill(Color.TRANSPARENT);       // Set fill color
-            circle.setStroke(Color.GREEN);    // Set stroke color
+            circle.setStroke(Color.BLACK);    // Set stroke color
             circle.setStrokeWidth(1);
             figure.getChildren().add(circle);
         }
