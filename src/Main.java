@@ -18,7 +18,6 @@ public class Main extends Application {
     private String word;
     private StringBuilder hiddenWord;
     private int tries;
-
     private Label hiddenWordLabel;
     private Label triesLabel;
     private TextField guessTextField;
@@ -43,7 +42,6 @@ public class Main extends Application {
         Label welcomeLabel = new Label("Welcome to Hangman Game by IronPants group!");
 
         // Skapa layout för startsidan
-        //"Video screen" användes som ett allmänt begrepp för att hänvisa till den initiala skärmen i JavaFX-applikation.
         VBox firstScreenLayout = createVBoxWithChildren(10, Pos.CENTER, playButton, welcomeLabel);
         Scene firstScreenScene = new Scene(firstScreenLayout, 400, 300);
         firstScreenLayout.setStyle("-fx-background-color: #00FA9A;");
