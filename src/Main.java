@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 public class Main extends Application {
 
     private String word;
+    private String playerName;
     private StringBuilder hiddenWord;
     private int tries;
     private Label hiddenWordLabel;
@@ -41,7 +42,7 @@ public class Main extends Application {
             VBox gameLayout = showGameMenu(newStage);
             Scene scene = new Scene(gameLayout, 300, 200);
             newStage.setScene(scene);
-            newStage.setTitle("Hangman Game " + (i + 1));
+            newStage.setTitle("Hangman Game" +  (i + 1));
 
             //placerar fönsterna brevid och under varandra, 3 och 3.
             if(i<3) {
@@ -60,25 +61,38 @@ public class Main extends Application {
         // Skapa UI-element för spelsidan
         Label welcomeLabel = new Label("Hangman Game by IronPants group!");
         Label multiplayerLabel = new Label("6 skärm - multiplayer version");
+
+        // TextField for entering player name in the game menu
+        TextField playerNameTextField = new TextField("Enter Your Name");
+
+        // Clear default text when the user starts typing
+        playerNameTextField.setOnMouseClicked(e -> {
+            if ("Enter Your Name".equals(playerNameTextField.getText())) {
+                playerNameTextField.clear();
+            }
+        });
+
         Button startButton = new Button("Spela");
-        startButton.setOnAction(e -> showStartScreen(currentStage));
+        startButton.setOnAction(e -> showStartScreen(currentStage, playerNameTextField.getText()));
 
         VBox gameMenuLayout = new VBox(10);
         gameMenuLayout.setAlignment(Pos.CENTER);
         gameMenuLayout.getChildren().add(welcomeLabel);
         gameMenuLayout.getChildren().add(multiplayerLabel);
+        gameMenuLayout.getChildren().add(playerNameTextField);
         gameMenuLayout.getChildren().add(startButton);
         gameMenuLayout.setStyle("-fx-background-color: #00FA9A;");
 
         return gameMenuLayout;
     }
 
-    private void showStartScreen(Stage primaryStage) {
+
+    private void showStartScreen(Stage primaryStage, String playerName) {
         // Skapa UI-element för startsidan
         Label wordLabel = new Label("Skriv in ett ord:");
         PasswordField wordTextField = new PasswordField();
         Button startButton = new Button("Starta");
-        startButton.setOnAction(e -> handleStartButtonClick(wordTextField.getText().toLowerCase(), primaryStage));
+        startButton.setOnAction(e -> handleStartButtonClick(wordTextField.getText().toLowerCase(), primaryStage, playerName));
 
         // Skapa layout för startsidan
         VBox startLayout = createVBoxWithChildren(10, Pos.CENTER, wordLabel, wordTextField, startButton);
@@ -92,16 +106,20 @@ public class Main extends Application {
     private void showGameScreen(Stage primaryStage) {
         // Skapa UI-element för spelsidan
         hiddenWordLabel = new Label(hiddenWord.toString());
-        triesLabel = new Label("Försök kvar: " + tries);
+
+        triesLabel = new Label(playerName+" har "+ tries + " Försök kvar");
         Label guessLabel = new Label("Skriv in en bokstav:");
         guessTextField = new TextField();
         Button guessButton = new Button("Gissa");
         guessButton.setOnAction(e -> handleGuessButtonClick(guessTextField.getText().toLowerCase(), primaryStage));
         figure = new Group();
 
+        // TextField för att visa spelarens namn
+        TextField playerNameTextField = new TextField(playerName);
+
         // Skapa layout för spelsidan
         GridPane gameLayout = createGridPaneWithChildren(10, 10, 10, new Insets(10), Pos.CENTER,
-                hiddenWordLabel, triesLabel, guessLabel, guessTextField, guessButton);
+                hiddenWordLabel, triesLabel, guessLabel, guessTextField, guessButton, playerNameTextField);
         gameLayout.setStyle("-fx-background-color:#00FA9A;");
 
         // Create an AnchorPane to overlay the Line on top of the GridPane
@@ -113,19 +131,21 @@ public class Main extends Application {
         AnchorPane.setBottomAnchor(gameLayout, 0.0);
         AnchorPane.setLeftAnchor(gameLayout, 0.0);
 
-
         // Ordna hur element ska visas
         GridPane.setRowIndex(hiddenWordLabel, 0);
         GridPane.setRowIndex(triesLabel, 1);
         GridPane.setRowIndex(guessLabel, 2);
         GridPane.setRowIndex(guessTextField, 3);
         GridPane.setRowIndex(guessButton, 4);
+        GridPane.setRowIndex(playerNameTextField, 5);
 
         // Skapa en scen för spelet
         Scene gameScene = new Scene(anchorPane, 300, 200);
 
         // Sätt spelscenen
         primaryStage.setScene(gameScene);
+        // Set stage title with player name
+        primaryStage.setTitle("Hangman Game - " + playerName);
         primaryStage.show();
     }
 
@@ -160,17 +180,21 @@ public class Main extends Application {
         alert.showAndWait();
     }
 
-    private void handleStartButtonClick(String inputWord, Stage primaryStage) {
+    private void handleStartButtonClick(String inputWord, Stage primaryStage, String playerName) {
         // Hantera startknappen
         if (inputWord.matches("[a-z]+")) {
             word = inputWord;
             hiddenWord = new StringBuilder("-".repeat(word.length()));
             tries = 10;
+            this.playerName = playerName;  // Set the class-level playerName variable
             showGameScreen(primaryStage);
         } else {
             showAlert("Ogiltig inmatning", "Ange ett giltigt ord (endast små bokstäver).");
         }
     }
+
+
+
 
     private void handleGuessButtonClick(String inputGuess, Stage primaryStage) {
         // Hantera gissningsknappen och uppdatera spelstatusen
