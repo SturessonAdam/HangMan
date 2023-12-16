@@ -12,6 +12,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -23,6 +25,8 @@ public class Main extends Application {
     private Label triesLabel;
     private TextField guessTextField;
     private Group figure;
+// en lista med ord
+private final List<String> listOfWords = Arrays.asList( "hangman", "java", "computer");
 
     public static void main(String[] args) {
         // Starta
@@ -32,25 +36,69 @@ public class Main extends Application {
     @Override
     // Startmetod för JavaFX-applikationen
     public void start(Stage primaryStage) {
+        showInitialScreen(primaryStage);
+    }
+
+    private void showInitialScreen(Stage primaryStage) {
+        Label welcomeLabel = new Label("Welcome to Hangman!");
+        Button singlePlayerButton = new Button("Single Player");
+        Button multiplayerButton = new Button("Multiplayer");
+        Button exitButton = new Button("Exit");
+
+        VBox initialLayout = createVBoxWithChildren(10, Pos.CENTER, welcomeLabel, singlePlayerButton, multiplayerButton, exitButton);
+        initialLayout.setStyle("-fx-background-color: orange;");
+        Scene initialScene = new Scene(initialLayout, 300, 200);
+
+        singlePlayerButton.setOnAction(e -> handleSinglePlayerClick(primaryStage));
+        multiplayerButton.setOnAction(e -> handleMultiplayerClick(primaryStage));
+        exitButton.setOnAction(e -> primaryStage.close());
+
+        primaryStage.setScene(initialScene);
+        primaryStage.setTitle("Hangman Game");
+        primaryStage.show();
+    }
+
+    private void handleSinglePlayerClick(Stage primaryStage) {
+        Stage singlePlayerStage = new Stage();
+
+        // Randomly select a word from the predefined list
+        int randomIndex = (int) (Math.random() * listOfWords.size());
+        word = listOfWords.get(randomIndex);
+
+        // Initialize other game variables
+        hiddenWord = new StringBuilder("-".repeat(word.length()));
+        tries = 10;
+        playerName = "Single Player";
+
+        // Show the game screen
+        VBox gameLayout = showGameMenu(singlePlayerStage);
+        Scene scene = new Scene(gameLayout, 300, 200);
+        singlePlayerStage.setScene(scene);
+        singlePlayerStage.setTitle("Hangman Game - Single Player");
+
+        singlePlayerStage.setX(300);
+        singlePlayerStage.setY(100);
+        singlePlayerStage.show();
+    }
+
+    private void handleMultiplayerClick(Stage primaryStage) {
         int windowWidth = 300;
         int windowHeight = 200;
         int spacing = 10;
 
-        //skapar upp 6 nya spelscener men går bara spela på en av dom då alla fönster använder samma variabler.
         for (int i = 0; i < 6; i++) {
             Stage newStage = new Stage();
             VBox gameLayout = showGameMenu(newStage);
             Scene scene = new Scene(gameLayout, 300, 200);
             newStage.setScene(scene);
-            newStage.setTitle("Hangman Game" +  (i + 1));
+            newStage.setTitle("Hangman Game" + (i + 1));
 
-            //placerar fönsterna brevid och under varandra, 3 och 3.
-            if(i<3) {
+            if (i < 3) {
                 newStage.setX(i * (windowWidth + spacing));
-                newStage.setY(100); }
-            else {
-                newStage.setX((i-3)*(windowWidth + spacing));
-                newStage.setY(130+windowHeight + spacing);
+                newStage.setY(100);
+            } else {
+                newStage.setX((i - 3) * (windowWidth + spacing));
+                newStage.setY(130 + windowHeight + spacing);
             }
 
             newStage.show();
@@ -60,7 +108,7 @@ public class Main extends Application {
     private VBox showGameMenu(Stage currentStage) {
         // Skapa UI-element för spelsidan
         Label welcomeLabel = new Label("Hangman Game by IronPants group!");
-        Label multiplayerLabel = new Label("6 skärm - multiplayer version");
+        Label multiplayerLabel = new Label("Good luck!");
 
         // Textfält för att ange spelarens namn i spelmenyn
         TextField playerNameTextField = new TextField("Enter Your Name");
@@ -88,14 +136,14 @@ public class Main extends Application {
 
     private void showStartScreen(Stage primaryStage, String playerName) {
         // Skapa UI-element för startsidan
-        Label wordLabel = new Label("Skriv in ett ord:");
+        Label wordLabel = new Label("Skriv in ett ord, eller om du vill att spelet välja ordet tryck starta!");
         PasswordField wordTextField = new PasswordField();
         Button startButton = new Button("Starta");
         startButton.setOnAction(e -> handleStartButtonClick(wordTextField.getText().toLowerCase(), primaryStage, playerName));
 
         // Skapa layout för startsidan
         VBox startLayout = createVBoxWithChildren(10, Pos.CENTER, wordLabel, wordTextField, startButton);
-        Scene startScene = new Scene(startLayout, 300, 200);
+        Scene startScene = new Scene(startLayout, 450, 300);
         startLayout.setStyle("-fx-background-color: #00FA9A;");
 
         primaryStage.setScene(startScene);
@@ -177,18 +225,30 @@ public class Main extends Application {
 
     private void handleStartButtonClick(String inputWord, Stage primaryStage, String playerName) {
         // Hantera startknappen
-        if (inputWord.matches("[a-z]+")) {
+        if (inputWord.isEmpty()) {
+            // välja ord från list
+            word = getRandomWordFromList();
+        } else if (inputWord.matches("[a-z]+")) {
+            // multiplayer
             word = inputWord;
-            hiddenWord = new StringBuilder("-".repeat(word.length()));
-            tries = 10;
-            this.playerName = playerName;  // Set the class-level playerName variable
-            showGameScreen(primaryStage);
         } else {
             showAlert("Ogiltig inmatning", "Ange ett giltigt ord (endast små bokstäver).");
+            return;
         }
+
+        //initialization single-player and multiplayer
+        hiddenWord = new StringBuilder("-".repeat(word.length()));
+        tries = 10;
+        this.playerName = playerName;  // Set the class-level playerName variable
+
+        // visa spelet skärm
+        showGameScreen(primaryStage);
     }
 
-
+    private String getRandomWordFromList() {
+        int randomIndex = (int) (Math.random() * listOfWords.size());
+        return listOfWords.get(randomIndex);
+    }
 
 
     private void handleGuessButtonClick(String inputGuess, Stage primaryStage) {
