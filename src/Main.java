@@ -47,10 +47,10 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
 
         VBox initialLayout = createVBoxWithChildren(10, Pos.CENTER, welcomeLabel, singlePlayerButton, multiplayerButton, exitButton);
         initialLayout.setStyle("-fx-background-color: orange;");
-        Scene initialScene = new Scene(initialLayout, 300, 200);
+        Scene initialScene = new Scene(initialLayout, 300, 250);
 
-        singlePlayerButton.setOnAction(e -> handleSinglePlayerClick(primaryStage));
-        multiplayerButton.setOnAction(e -> handleMultiplayerClick(primaryStage));
+        singlePlayerButton.setOnAction(e -> handleSinglePlayerClick());
+        multiplayerButton.setOnAction(e -> handleMultiplayerClick());
         exitButton.setOnAction(e -> primaryStage.close());
 
         primaryStage.setScene(initialScene);
@@ -58,19 +58,19 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         primaryStage.show();
     }
 
-    private void handleSinglePlayerClick(Stage primaryStage) {
+    private void handleSinglePlayerClick() {
         Stage singlePlayerStage = new Stage();
 
-        // Randomly select a word from the predefined list
+        // Random ord från list
         int randomIndex = (int) (Math.random() * listOfWords.size());
         word = listOfWords.get(randomIndex);
 
-        // Initialize other game variables
+        // Initialize spel variabler
         hiddenWord = new StringBuilder("-".repeat(word.length()));
         tries = 10;
         playerName = "Single Player";
 
-        // Show the game screen
+        // visa spelet skärm
         VBox gameLayout = showGameMenu(singlePlayerStage);
         Scene scene = new Scene(gameLayout, 300, 200);
         singlePlayerStage.setScene(scene);
@@ -81,7 +81,7 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         singlePlayerStage.show();
     }
 
-    private void handleMultiplayerClick(Stage primaryStage) {
+    private void handleMultiplayerClick() {
         int windowWidth = 300;
         int windowHeight = 200;
         int spacing = 10;
@@ -236,7 +236,7 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
             return;
         }
 
-        //initialization single-player and multiplayer
+        //initialization single-player och multiplayer
         hiddenWord = new StringBuilder("-".repeat(word.length()));
         tries = 10;
         this.playerName = playerName;  // Set the class-level playerName variable

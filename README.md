@@ -1,33 +1,36 @@
-# HangManGame
-Main-klassen är huvudklassen som utökar Application (JavaFX-biblioteket) och har metoder för att skapa och hantera olika spelstadier.
 
-Startmetoden (start): Den sätter upp den inledande scenen med en knapp ("Spela"). När knappen klickas på, går vi vidare till nästa metod (showGameMenu).
+# Hangman Game - JavaFX
 
-showGameMenu-metoden: Skapar en scen för spelsidan med en "Start"-knapp. När den klickas på, går vi vidare till nästa metod (showStartScreen).
+## Beskrivning
+Detta är en enkel implementation av hänga gubbe-spelet skrivet i Java med JavaFX-gränssnitt. 
+Spelet stödjer både en spelare och fler spelare.
 
-showStartScreen-metoden: Skapar en scen där användaren kan skriva in ett ord och starta spelet genom att klicka på "Starta"-knappen. När spelet startar, går vi vidare till showGameScreen.
+## Funktioner
+- Välkomstskärm: Vid start visas en välkomstskärm där spelaren kan välja mellan enskild spelare, flerspelarläge eller avsluta spelet.
+- Enskild spelare: Spelaren väljer ett slumpmässigt ord från en fördefinierad lista och försöker gissa bokstäver för att avslöja det dolda ordet.
+- Flerspelarläge: Upp till sex spelare kan spela samtidigt. Varje spelare får sitt eget fönster och gissar på samma dolda ord.
+- Anpassning av ord: En spelare kan välja att ange sitt eget ord eller låta spelet välja ett slumpmässigt ord.
+- Gissningsfunktion: Spelaren gissar på bokstäver, och spelet visar antalet försök kvar samt det dolda ordet med korrekta gissningar.
+- Grafisk representation: En hänga gubbe-figuren visas grafiskt, och den uppdateras vid felaktiga gissningar.
 
-showGameScreen-metoden: Skapar spelscenen med etiketter för det dolda ordet, antal försök, en textinmatningsruta för gissningar och en "Gissa"-knapp. Här börjar spelet.
+## Hur man använder programmet
+1. Vid start välj om du vill spela enskild spelare, flerspelarläge eller avsluta spelet.
+2. I enskild spelare-läget väljs ett slumpmässigt ord, och spelaren får gissa bokstäver för att avslöja ordet.
+3. I flerspelarläget kan upp till sex spelare spela samtidigt med egna fönster.
+4. En spelare kan ange ett eget ord eller låta spelet välja ett slumpmässigt ord.
+5. Gissa på bokstäver och försök avslöja det dolda ordet.
+6. Spelet visar antalet försök kvar och uppdaterar det dolda ordet med varje korrekt gissning.
+7. Grafiken för hänga gubbe-figuren uppdateras vid felaktiga gissningar.
+8. Spelet avslutas när spelaren har gissat rätt ord eller när inga försök återstår.
 
-Gissningsmetoderna (updateHiddenWord, isWordGuessed, updateGameScreen):
+## Systemkrav
+- Java Runtime Environment (JRE) krävs för att köra programmet.
+- JavaFX-biblioteket måste vara installerat.
 
-updateHiddenWord: Uppdaterar det dolda ordet med en gissad bokstav.
-isWordGuessed: Kontrollerar om hela ordet har gissats.
-updateGameScreen: Uppdaterar spelsidan med det uppdaterade dolda ordet.
-showAlert-metoden: Visar ett informationselement med angiven titel och meddelande.
+## Utvecklare
+Programmet utvecklades av "IronPants."
 
-handleStartButtonClick-metoden: Anropas när användaren klickar på "Starta"-knappen på startsidan. Kontrollerar om inmatningen är ett giltigt ord och startar spelet om så är fallet.
 
-handleGuessButtonClick-metoden: Anropas när användaren gissar på en bokstav. Uppdaterar spelets tillstånd baserat på gissningen och visar varningar eller gratulationsmeddelanden vid behov.
 
-Layoutmetoderna (createVBoxWithChildren, createGridPaneWithChildren):
+---
 
-createVBoxWithChildren: Skapar en vertikal box (VBox) med specificerat avstånd, position och innehåll.
-createGridPaneWithChildren: Skapar en rutnätslayout (GridPane) med specificerade egenskaper och innehåll.
-Spelets gång:
-Starta programmet.
-Tryck på "Spela"-knappen för att komma till spelsidan.
-Tryck på "Starta"-knappen för att skriva in ett ord och börja spelet.
-På spelsidan, skriv in bokstäver i textinmatningsrutan och tryck på "Gissa"-knappen.
-Upprepa steg 4 tills antingen ordet gissas korrekt eller antalet tillåtna försök tar slut.
-En varningsruta visas med lämpligt meddelande baserat på spelets resultat.
