@@ -62,10 +62,9 @@ public class Main extends Application {
         Label welcomeLabel = new Label("Hangman Game by IronPants group!");
         Label multiplayerLabel = new Label("6 skärm - multiplayer version");
 
-        // TextField for entering player name in the game menu
+        // Textfält för att ange spelarens namn i spelmenyn
         TextField playerNameTextField = new TextField("Enter Your Name");
 
-        // Clear default text when the user starts typing
         playerNameTextField.setOnMouseClicked(e -> {
             if ("Enter Your Name".equals(playerNameTextField.getText())) {
                 playerNameTextField.clear();
@@ -118,10 +117,10 @@ public class Main extends Application {
                 hiddenWordLabel, guessLabel, guessTextField, guessButton, triesLabel); // Remove playerNameTextField
         gameLayout.setStyle("-fx-background-color:#00FA9A;");
 
-        // Create an AnchorPane to overlay the Line on top of the GridPane
+        // Skapa en AnchorPane för att överlagra Line ovanpå GridPane
         AnchorPane anchorPane = new AnchorPane();
         anchorPane.getChildren().addAll(gameLayout, figure);
-        // Anchor the GridPane to the edges of the AnchorPane
+        // Fäst GridPane till kanterna
         AnchorPane.setTopAnchor(gameLayout, 0.0);
         AnchorPane.setRightAnchor(gameLayout, 0.0);
         AnchorPane.setBottomAnchor(gameLayout, 0.0);
@@ -239,7 +238,6 @@ public class Main extends Application {
     }
 
     private void showNextPenalty(int tries) {
-        /*System.out.println("tries:" + tries);*/
         Line line = null;
         Circle circle = null;
         switch (tries) {
