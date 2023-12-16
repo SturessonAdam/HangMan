@@ -1,5 +1,5 @@
 # HangManGame
-HangmanGame-klassen är huvudklassen som utökar Application (JavaFX-biblioteket) och har metoder för att skapa och hantera olika spelstadier.
+Main-klassen är huvudklassen som utökar Application (JavaFX-biblioteket) och har metoder för att skapa och hantera olika spelstadier.
 
 Startmetoden (start): Den sätter upp den inledande scenen med en knapp ("Spela"). När knappen klickas på, går vi vidare till nästa metod (showGameMenu).
 

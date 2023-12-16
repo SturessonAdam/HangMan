@@ -106,20 +106,16 @@ public class Main extends Application {
     private void showGameScreen(Stage primaryStage) {
         // Skapa UI-element för spelsidan
         hiddenWordLabel = new Label(hiddenWord.toString());
-
-        triesLabel = new Label(playerName+" har "+ tries + " Försök kvar");
+        triesLabel = new Label(playerName + " har " + tries + " försök kvar"); // Display player name and tries
         Label guessLabel = new Label("Skriv in en bokstav:");
         guessTextField = new TextField();
         Button guessButton = new Button("Gissa");
         guessButton.setOnAction(e -> handleGuessButtonClick(guessTextField.getText().toLowerCase(), primaryStage));
         figure = new Group();
 
-        // TextField för att visa spelarens namn
-        TextField playerNameTextField = new TextField(playerName);
-
         // Skapa layout för spelsidan
         GridPane gameLayout = createGridPaneWithChildren(10, 10, 10, new Insets(10), Pos.CENTER,
-                hiddenWordLabel, triesLabel, guessLabel, guessTextField, guessButton, playerNameTextField);
+                hiddenWordLabel, guessLabel, guessTextField, guessButton, triesLabel); // Remove playerNameTextField
         gameLayout.setStyle("-fx-background-color:#00FA9A;");
 
         // Create an AnchorPane to overlay the Line on top of the GridPane
@@ -133,11 +129,10 @@ public class Main extends Application {
 
         // Ordna hur element ska visas
         GridPane.setRowIndex(hiddenWordLabel, 0);
-        GridPane.setRowIndex(triesLabel, 1);
-        GridPane.setRowIndex(guessLabel, 2);
+        GridPane.setRowIndex(guessLabel, 1);
         GridPane.setRowIndex(guessTextField, 3);
         GridPane.setRowIndex(guessButton, 4);
-        GridPane.setRowIndex(playerNameTextField, 5);
+        GridPane.setRowIndex(triesLabel, 5);
 
         // Skapa en scen för spelet
         Scene gameScene = new Scene(anchorPane, 300, 200);
@@ -148,6 +143,7 @@ public class Main extends Application {
         primaryStage.setTitle("Hangman Game - " + playerName);
         primaryStage.show();
     }
+
 
     private boolean updateHiddenWord(char guess) {
         // Uppdatera dolt ord med gissade bokstaven
@@ -204,7 +200,7 @@ public class Main extends Application {
             if (!correctGuess) {
                 showNextPenalty(tries);
                 tries--;
-                triesLabel.setText("Försök kvar: " + tries);
+                triesLabel.setText(playerName + " har " + tries + " försök kvar");
             }
             updateGameScreen();
             if (isWordGuessed()) {
