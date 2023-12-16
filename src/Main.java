@@ -1,3 +1,4 @@
+
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -39,19 +40,28 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         showInitialScreen(primaryStage);
     }
 
-    private void showInitialScreen(Stage primaryStage) {
+    private Scene createInitialScene(Stage primaryStage) {
         Label welcomeLabel = new Label("Welcome to Hangman!");
         Button singlePlayerButton = new Button("Single Player");
         Button multiplayerButton = new Button("Multiplayer");
         Button exitButton = new Button("Exit");
 
-        VBox initialLayout = createVBoxWithChildren(10, Pos.CENTER, welcomeLabel, singlePlayerButton, multiplayerButton, exitButton);
-        initialLayout.setStyle("-fx-background-color: orange;");
-        Scene initialScene = new Scene(initialLayout, 300, 250);
-
+        // Setta aktion för event handlers
         singlePlayerButton.setOnAction(e -> handleSinglePlayerClick());
         multiplayerButton.setOnAction(e -> handleMultiplayerClick());
         exitButton.setOnAction(e -> primaryStage.close());
+
+        // skapa vbox layout
+        VBox initialLayout = createVBoxWithChildren(10, Pos.CENTER, welcomeLabel, singlePlayerButton,
+                multiplayerButton, exitButton);
+        initialLayout.setStyle("-fx-background-color: orange;");
+
+        // skapa och retura första scenen
+        return new Scene(initialLayout, 300, 250);
+    }
+
+    private void showInitialScreen(Stage primaryStage) {
+        Scene initialScene = createInitialScene(primaryStage);
 
         primaryStage.setScene(initialScene);
         primaryStage.setTitle("Hangman Game");
