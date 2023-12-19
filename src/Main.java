@@ -15,6 +15,8 @@ import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main extends Application {
 
@@ -26,6 +28,9 @@ public class Main extends Application {
     private Label triesLabel;
     private TextField guessTextField;
     private Group figure;
+
+    // map för att koppla scener med motsvarande Main-instanser
+    private final Map<Stage, Main> multiplayerGames = new HashMap<>();
 // en lista med ord
 private final List<String> listOfWords = Arrays.asList( "hangman", "java", "computer");
 
@@ -52,7 +57,7 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         exitButton.setOnAction(e -> primaryStage.close());
 
         // skapa vbox layout
-        VBox initialLayout = createVBoxWithChildren(10, Pos.CENTER, welcomeLabel, singlePlayerButton,
+        VBox initialLayout = createVBoxWithChildren(welcomeLabel, singlePlayerButton,
                 multiplayerButton, exitButton);
         initialLayout.setStyle("-fx-background-color: orange;");
 
@@ -97,23 +102,40 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         int spacing = 10;
 
         for (int i = 0; i < 6; i++) {
-            Stage newStage = new Stage();
-            VBox gameLayout = showGameMenu(newStage);
+            Stage multiplayerStage = new Stage();
+
+            // Skapa en ny instans av Main för varje multiplayer-spel
+            Main multiplayerGame = new Main();
+            multiplayerGame.initMultiplayerGame(multiplayerStage, i + 1);
+
+            VBox gameLayout = multiplayerGame.showGameMenu(multiplayerStage);
             Scene scene = new Scene(gameLayout, 300, 200);
-            newStage.setScene(scene);
-            newStage.setTitle("Hangman Game" + (i + 1));
-
+            multiplayerStage.setScene(scene);
+            multiplayerStage.setTitle("Hangman Game - Multiplayer Player " + (i + 1));
+            // Placera scenen baserat på index i loopen
             if (i < 3) {
-                newStage.setX(i * (windowWidth + spacing));
-                newStage.setY(100);
+                multiplayerStage.setX(i * (windowWidth + spacing));
+                multiplayerStage.setY(100);
             } else {
-                newStage.setX((i - 3) * (windowWidth + spacing));
-                newStage.setY(130 + windowHeight + spacing);
+                multiplayerStage.setX((i - 3) * (windowWidth + spacing));
+                multiplayerStage.setY(130 + windowHeight + spacing);
             }
-
-            newStage.show();
+            // Spara data mellan scenen och Main-instansen
+            // varje stage har egen Main-instansen
+            multiplayerGames.put(multiplayerStage, multiplayerGame);
+            // Visa scenen
+            multiplayerStage.show();
         }
     }
+
+         //En ny metod initMultiplayerGame användes för att
+         // initiera inställningar specifika för varje multiplayer-spel och
+         // för att koppla scenen med den nya instansen av Main.
+    private void initMultiplayerGame(Stage stage, int playerNumber) {
+        playerName = "Multiplayer Player " + playerNumber;
+        multiplayerGames.put(stage, this);
+    }
+
 
     private VBox showGameMenu(Stage currentStage) {
         // Skapa UI-element för spelsidan
@@ -152,7 +174,7 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         startButton.setOnAction(e -> handleStartButtonClick(wordTextField.getText().toLowerCase(), primaryStage, playerName));
 
         // Skapa layout för startsidan
-        VBox startLayout = createVBoxWithChildren(10, Pos.CENTER, wordLabel, wordTextField, startButton);
+        VBox startLayout = createVBoxWithChildren(wordLabel, wordTextField, startButton);
         Scene startScene = new Scene(startLayout, 450, 300);
         startLayout.setStyle("-fx-background-color: #00FA9A;");
 
@@ -171,7 +193,7 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         figure = new Group();
 
         // Skapa layout för spelsidan
-        GridPane gameLayout = createGridPaneWithChildren(10, 10, 10, new Insets(10), Pos.CENTER,
+        GridPane gameLayout = createGridPaneWithChildren(new Insets(10),
                 hiddenWordLabel, guessLabel, guessTextField, guessButton, triesLabel); // Remove playerNameTextField
         gameLayout.setStyle("-fx-background-color:#00FA9A;");
 
@@ -266,6 +288,7 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         if (inputGuess.matches("[a-z]")) {
             char guess = inputGuess.charAt(0);
             boolean correctGuess = updateHiddenWord(guess);
+            updateGameScreen(); // uppdatera skärm innan stänga skärmen
             if (!correctGuess) {
                 showNextPenalty(tries);
                 tries--;
@@ -287,22 +310,21 @@ private final List<String> listOfWords = Arrays.asList( "hangman", "java", "comp
         }
     }
 
-    private VBox createVBoxWithChildren(double spacing, Pos alignment, Node... children) {
+    private VBox createVBoxWithChildren(Node... children) {
         // Skapa en vertikal box (VBox)
-        VBox vbox = new VBox(spacing);
-        vbox.setAlignment(alignment);
+        VBox vbox = new VBox(10);
+        vbox.setAlignment(Pos.CENTER);
         vbox.getChildren().addAll(children);
         return vbox;
     }
 
-    private GridPane createGridPaneWithChildren(double hgap, double vgap, double padding,
-                                                Insets insets, Pos alignment, Node... children) {
+    private GridPane createGridPaneWithChildren(Insets insets, Node... children) {
         // Skapa en GridPane
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(hgap);
-        gridPane.setVgap(vgap);
-        gridPane.setPadding(new Insets(padding));
-        gridPane.setAlignment(alignment);
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setPadding(new Insets(10));
+        gridPane.setAlignment(Pos.CENTER);
         gridPane.getChildren().addAll(children);
         return gridPane;
     }
